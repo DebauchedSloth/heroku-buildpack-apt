@@ -36,7 +36,7 @@ APT_SOURCELIST_DIR="$CACHE_DIR/apt/sources"   # place custom sources.list here
 mkdir -p "$APT_CACHE_DIR"
 mkdir -p "$APT_STATE_DIR"
 mkdir -p "$APT_SOURCELIST_DIR"
-
+J
 APT_SOURCES="$APT_SOURCELIST_DIR/sources.list"
 
 if [ -f $APT_CACHE_DIR/Aptfile ] && cmp -s $BUILD_DIR/Aptfile $APT_CACHE_DIR/Aptfile ; then
@@ -65,18 +65,23 @@ APT_OPTIONS="$APT_OPTIONS -o dir::etc::sourcelist=$APT_SOURCES"
 topic "Updating apt caches"
 apt-get $APT_OPTIONS --allow-insecure-repositories update | indent
 
-for PACKAGE in $(cat $BUILD_DIR/Aptfile | grep -v -s -e "^:repo:"); do
-  if [[ $PACKAGE == *deb ]]; then
-    PACKAGE_NAME=$(basename $PACKAGE .deb)
-    PACKAGE_FILE=$APT_CACHE_DIR/archives/$PACKAGE_NAME.deb
+#for PACKAGE in $(cat $BUILD_DIR/Aptfile | grep -v -s -e "^:repo:"); do
+#  if [[ $PACKAGE == *deb ]]; then
+#    PACKAGE_NAME=$(basename $PACKAGE .deb)
+#    PACKAGE_FILE=$APT_CACHE_DIR/archives/$PACKAGE_NAME.deb
+#
+#    topic "Fetching $PACKAGE"
+#    curl -s -L -z $PACKAGE_FILE -o $PACKAGE_FILE $PACKAGE 2>&1 | indent
+#  else
+#    topic "Fetching .debs for $PACKAGE"
+#    apt-get $APT_OPTIONS -y --allow-downgrades --allow-remove-essential --allow-change-held-packages -d install --reinstall $PACKAGE | indent
+#  fi
+#done
 
-    topic "Fetching $PACKAGE"
-    curl -s -L -z $PACKAGE_FILE -o $PACKAGE_FILE $PACKAGE 2>&1 | indent
-  else
-    topic "Fetching .debs for $PACKAGE"
-    apt-get $APT_OPTIONS -y --allow-downgrades --allow-remove-essential --allow-change-held-packages -d install --reinstall $PACKAGE | indent
-  fi
-done
+PACKAGES = msodbcsql17 locales apt-utils postgresql-client zstd unixodbc unixodbc-dev libssl-dev libffi-dev
+
+apt-get $APT_OPTIONS -y --allow-downgrades --allow-remove-essential --allow-change-held-packages -d install --reinstall $PACKAGES | indent 
+
 
 mkdir -p $BUILD_DIR/.apt
 
