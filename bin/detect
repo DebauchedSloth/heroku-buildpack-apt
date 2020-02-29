@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 # bin/detect <build-dir>
 # This buildpack always installs
-echo "Yes" && exit 0
+echo "Apt" && exit 0
