@@ -78,7 +78,7 @@ apt-get $APT_OPTIONS --allow-insecure-repositories update | indent
 #  fi
 #done
 
-PACKAGES = msodbcsql17 locales apt-utils postgresql-client zstd unixodbc unixodbc-dev libssl-dev libffi-dev
+PACKAGES=msodbcsql17 locales apt-utils postgresql-client zstd unixodbc unixodbc-dev libssl-dev libffi-dev
 
 apt-get $APT_OPTIONS -y --allow-downgrades --allow-remove-essential --allow-change-held-packages -d install --reinstall $PACKAGES | indent 
 
