@@ -41,7 +41,7 @@ if [ -f $APT_CACHE_DIR/Aptfile ] && cmp -s $BUILD_DIR/Aptfile $APT_CACHE_DIR/Apt
 else
   # Aptfile changed or does not exist
   topic "Detected Aptfile changes, flushing cache"
-  curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
+#  curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
   curl https://packages.microsoft.com/config/debian/10/prod.list > /etc/apt/sources.list.d/mssql-release.list
   rm -rf $APT_CACHE_DIR
   mkdir -p "$APT_CACHE_DIR/archives/partial"
@@ -55,7 +55,7 @@ else
   cat $BUILD_DIR/Aptfile | grep -s -e "^:repo:" | sed 's/^:repo:\(.*\)\s*$/\1/g' >> $APT_SOURCES
 fi
 
-APT_OPTIONS="-o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
+APT_OPTIONS="--allow-unauthenticated -o debug::nolocking=true -o dir::cache=$APT_CACHE_DIR -o dir::state=$APT_STATE_DIR"
 APT_OPTIONS="$APT_OPTIONS -o dir::etc::sourcelist=$APT_SOURCES"
 
 topic "Updating apt caches"
